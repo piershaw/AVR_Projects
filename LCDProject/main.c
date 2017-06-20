@@ -3,10 +3,6 @@
  *
  * Created: 6/7/2017 7:11:11 PM
  * Author : piers
- *
- *
- *
- *
  */ 
 
  /************************************************************************/
@@ -43,10 +39,6 @@
 #define LCDEnable             PINC2
 #define LCDReadWrite		  PINC1
 #define LCDRegistorSelect     PINC0
-
-
-
-
 
 //Commands
 #define CLEARSCREEN		0x01
@@ -90,14 +82,14 @@ int main(void)
 }
 //reading input
 void checkStatus(){	
-	DataDirMain = 0; //set to input ? change to the right way later
+	DataDirMain = 0x00;
 	LCDControl |= 1 << LCDReadWrite;
 	LCDControl &= ~(1 << LCDRegistorSelect);
 	  while (LCDMain >= BUZZY)
 	  {
 		enable();
 	  }
-	DataDirMain = 0xFF; // set all I/O pins to OUTPUT 0b11111111
+	DataDirMain = 0xFF;
 }
 
 // debug
@@ -122,7 +114,7 @@ void sendCommand(unsigned char cmd){
 	LCDMain = cmd; 
 	LCDControl &= ~((1 << LCDReadWrite) | (1 << LCDRegistorSelect));
 	enable();
-	LCDMain = 0;
+	LCDMain = 0x00;
 }
 //output
 void sendCharacter(unsigned char c){
@@ -131,7 +123,7 @@ void sendCharacter(unsigned char c){
 	LCDControl &= ~(1 << LCDReadWrite);
 	LCDControl |= 1 << LCDRegistorSelect;
 	enable();
-	LCDMain = 0;
+	LCDMain = 0x00;
 }
 //output
 void sendString(char *stringOfChars){
