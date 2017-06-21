@@ -27,35 +27,9 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdio.h> // this is for printf
-
-#define LCDMain               PORTD
-#define DataDirMain           DDRD
-
-#define LCDControl            PORTC
-#define DataDirControl		  DDRC
-
-#define LedGreen              PINC3
-#define LCDEnable             PINC2
-#define LCDReadWrite		  PINC1
-#define LCDRegistorSelect     PINC0
-
-//Commands
-#define CLEARSCREEN		0x01
-#define BUZZY			0x80
-#define BITMODE8BIT		0x38
-
-#define LCDOFF 0b00001100
-#define LCDON 0b00001110
-#define LCDONBlink 0b00001111
-
-//Prototypes put in header file later
-void enable(void);
-void sendCommand(unsigned char);
-void sendCharacter(unsigned char);
-void checkStatus(void);
-void sendString(char *stringOfChars);
-void powerON();
+#include <stdio.h>
+#include <stdlib.h>
+#include "LCD.h"
 
 /************************************************************************/
 /*main*/
@@ -63,74 +37,13 @@ void powerON();
 int main(void)
 {
 	printf("Running!");
-	// sets all DDRC data direction ports to output bit[1] 
-	DataDirControl |= 1 << LCDEnable | 1 << LCDReadWrite | 1 << LCDRegistorSelect | 1 << LedGreen;
-	_delay_ms(15);
-    /* Replace with your application code */
-	sendCommand(CLEARSCREEN);
-	_delay_ms(2);
-	sendCommand(BITMODE8BIT);
-	_delay_ms(50);
-	sendCommand(LCDONBlink);
-	_delay_ms(50);
-	sendString("piershaw");
-	
+	LCD();
+
     while (1) 
     {
 		powerON();
     }
 }
-//reading input
-void checkStatus(){	
-	DataDirMain = 0x00;
-	LCDControl |= 1 << LCDReadWrite;
-	LCDControl &= ~(1 << LCDRegistorSelect);
-	  while (LCDMain >= BUZZY)
-	  {
-		enable();
-	  }
-	DataDirMain = 0xFF;
-}
 
-// debug
-void powerON(){
-	_delay_ms(100);
-	PINC |= (1<<LedGreen);
-}
-
-//Enable
-void enable(){
-	// switch it on and off 
-	//to receive a command
-	LCDControl |= (1 << LCDEnable);
-	asm volatile("nop");
-	asm volatile("nop");
-	LCDControl &= ~(1 << LCDEnable);
-	//to do a command
-}
-//output
-void sendCommand(unsigned char cmd){
-	checkStatus();
-	LCDMain = cmd; 
-	LCDControl &= ~((1 << LCDReadWrite) | (1 << LCDRegistorSelect));
-	enable();
-	LCDMain = 0x00;
-}
-//output
-void sendCharacter(unsigned char c){
-	checkStatus();
-	LCDMain = c;
-	LCDControl &= ~(1 << LCDReadWrite);
-	LCDControl |= 1 << LCDRegistorSelect;
-	enable();
-	LCDMain = 0x00;
-}
-//output
-void sendString(char *stringOfChars){
-	checkStatus();
-	while(*stringOfChars > 0){
-		sendCharacter(*stringOfChars++);
-	}
-}
 
 
