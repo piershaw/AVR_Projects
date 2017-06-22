@@ -6,6 +6,9 @@
  */ 
 
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 #ifndef LCD_H_
 #define LCD_H_
@@ -30,14 +33,20 @@
 #define LCDON 0b00001110
 #define LCDONBlink 0b00001111
 
-void LCD();
+
+int rows;
+int move;
+int scroll;
+char stringPos[4];
+char * messageString;
+
+void LCD(char *message,int scrollText);
 void enable(void);
 void sendCommand(unsigned char);
 void sendCharacter(unsigned char);
 void checkStatus(void);
 void sendString(char *stringOfChars);
-void powerON();
-
-
+void loop();
+void findRowsinLCD(void);
 
 #endif /* LCD_H_ */

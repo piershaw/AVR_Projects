@@ -36,12 +36,10 @@
 /************************************************************************/
 int main(void)
 {
-	printf("Running!");
-	LCD();
-
+	LCD("pier shaw was here",1);
     while (1) 
     {
-		powerON();
+		loop();
     }
 }
 

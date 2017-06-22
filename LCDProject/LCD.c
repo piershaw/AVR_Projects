@@ -13,10 +13,15 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "LCD.h"
 
 
-void LCD(){
+
+
+void LCD(char *message,int scrollText){
+ scroll = scrollText;
  // sets all DDRC data direction ports to output bit[1]
  DataDirControl |= 1 << LCDEnable | 1 << LCDReadWrite | 1 << LCDRegistorSelect | 1 << LedGreen;
  _delay_ms(15);
@@ -25,11 +30,16 @@ void LCD(){
  _delay_ms(2);
  sendCommand(BITMODE8BIT);
  _delay_ms(50);
- sendCommand(LCDONBlink);
+ sendCommand(LCDOFF);
  _delay_ms(50);
- sendString("pier shaw");
- }
 
+ messageString = message;
+ move = sizeof(messageString);
+ rows = 16+move;
+  //sendCommand(0x10);
+ 
+ }
+ 
  void checkStatus(){
 	 DataDirMain = 0x00;
 	 LCDControl |= 1 << LCDReadWrite;
@@ -42,11 +52,28 @@ void LCD(){
  }
 
  // debug
- void powerON(){
+ void loop(){
 	 _delay_ms(100);
 	 PINC |= (1<<LedGreen);
- }
 
+	 if(scroll==1){
+		 for(int i = 0; i < rows; i++){
+			 sendCommand(0x80 + i+1);
+			 sendString(messageString);
+			 if(i>rows){
+				 i = 0;
+			 }
+			 
+			 //itoa(i,stringPos,10);
+			 sendCommand(0x80 + i);
+			 sendString(" ");
+			 _delay_ms(50);
+		 }
+	}else{
+		sendString(messageString);
+	}
+	  
+	}
  //Enable
  void enable(){
 	 // switch it on and off
