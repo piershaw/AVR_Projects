@@ -5,7 +5,6 @@
  *  Author: piers
  */ 
  //reading input
-
 #ifndef F_CPU
 #define F_CPU 8000000UL // I have this at 8Mhz
 #endif

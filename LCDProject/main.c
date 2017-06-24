@@ -21,15 +21,10 @@
 			  I took -v -v -v out and it still works                                                        */
  /************************************************************************/
 
-#ifndef F_CPU
-#define F_CPU 8000000UL // I have this at 8Mhz
-#endif
 
 #include <avr/io.h>
-#include <util/delay.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "LCD.h"
+#include "ClockSpeed.h"
 
 /************************************************************************/
 /*main*/

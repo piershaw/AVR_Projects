@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "ClockSpeed.h"
 
 #ifndef LCD_H_
 #define LCD_H_
