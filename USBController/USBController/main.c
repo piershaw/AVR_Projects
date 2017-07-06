@@ -23,14 +23,27 @@
 #include <util/delay.h>
 #include <stdio.h>
 
+txSend(char* pBuffer, unsigned int uiSize);
+rxReceive(char* pBuffer, unsigned int uiSize);
+IsTxReady(void);
+IsRxReady(void);
+
+char* pTxBuffer;
+char* pRxBuffer;
+unsigned int uiTxCounter;
+unsigned int uiTxSize;
+unsigned int uiRxCounter;
+unsigned int uiRxSize;
+
 int main(void)
 {
 
-	PORTB = 1<<PCINT0; // Enable PCINT0 ahh might work
-	MCUCR = 1<<ISC01 | 1<<ISC00;	// Trigger INT0 on rising edge
+	DDRB = 1 << PCINT0; // Enable PCINT0 ahh might work
+	DDRB = 1 << PORTB;
+	TCCR0B  |= (1 << ISC00) |(1 << ISC01); // timer control register // might not need it
+	EICRA  |= (1 << ISC00) |(1 << ISC01);     // set INT0 to trigger on ANY logic change
+	EIMSK |= (1 << INT0);       // Turns on INT0
 	
-
-	DDRB = 1<<PB0; //makes pin 14 a input
 	// when pin 14 is low to ground ISR(PCINT0_vect) will run
 
     sei(); //Enable Global Interrupt
@@ -55,4 +68,13 @@ ISR(PCINT0_vect){
 ISR(BADISR_vect){
 
 }
+
+txSend(char* pBuffer, unsigned int uiSize){
+
+}
+
+rxReceive(char* pBuffer, unsigned int uiSize){
+
+}
+
 
