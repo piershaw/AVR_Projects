@@ -23,10 +23,10 @@
 #include <util/delay.h>
 #include <stdio.h>
 
-txSend(char* pBuffer, unsigned int uiSize);
-rxReceive(char* pBuffer, unsigned int uiSize);
-IsTxReady(void);
-IsRxReady(void);
+void txSend(char* pBuffer, unsigned int uiSize);
+void rxReceive(char* pBuffer, unsigned int uiSize);
+void IsTxReady(void);
+void IsRxReady(void);
 
 char* pTxBuffer;
 char* pRxBuffer;
@@ -38,18 +38,20 @@ unsigned int uiRxSize;
 int main(void)
 {
 
-	DDRB = 1 << PCINT0; // Enable PCINT0 ahh might work
-	DDRB = 1 << PORTB;
-	TCCR0B  |= (1 << ISC00) |(1 << ISC01); // timer control register // might not need it
-	EICRA  |= (1 << ISC00) |(1 << ISC01);     // set INT0 to trigger on ANY logic change
-	EIMSK |= (1 << INT0);       // Turns on INT0
+	//DDRB = 1 << PCINT0; // Enable PCINT0 ahh might work
+	DDRB = 1 << PORTB; //Directional Data register 
+	//TCCR0B  |= (1 << ISC00) |(1 << ISC01); // timer control register // might not need it
+	//EICRA  |= (1 << ISC00) |(1 << ISC01);     // set INT0 to trigger on ANY logic change
+	//EIMSK |= (1 << INT0);       // Turns on INT0
 	
+	PCICR  = 0b00000001;
+	PCMSK0 = 0b00000001;
+
 	// when pin 14 is low to ground ISR(PCINT0_vect) will run
 
     sei(); //Enable Global Interrupt
     while (1) 
     {
-	
 	_delay_ms(500);
 	// stuff
     }
@@ -69,11 +71,11 @@ ISR(BADISR_vect){
 
 }
 
-txSend(char* pBuffer, unsigned int uiSize){
+void txSend(char* pBuffer, unsigned int uiSize){
 
 }
 
-rxReceive(char* pBuffer, unsigned int uiSize){
+void rxReceive(char* pBuffer, unsigned int uiSize){
 
 }
 
